@@ -113,6 +113,7 @@ public class ViewPagerIndicator extends LinearLayout {
             LinearLayout.LayoutParams layoutParams= (LayoutParams) view.getLayoutParams();
             layoutParams.weight=0;
             layoutParams.width=getWidth()/visible_count;
+            view.setLayoutParams(layoutParams);
         }
         setItemClick();
     }
@@ -239,4 +240,38 @@ public class ViewPagerIndicator extends LinearLayout {
             }
         }
     }
+    /**
+     * 设置可见的tab的数量
+     *
+     * @param count
+     */
+    public void setVisibleTabCount(int count)
+    {
+        this.visible_count = count;
+    }
+
+    /**
+     * 设置tab的标题内容 可选，可以自己在布局文件中写死
+     *
+     * @param datas
+     */
+    public void setTabItemTitles(List<String> datas)
+    {
+        // 如果传入的list有值，则移除布局文件中设置的view
+        if (datas != null && datas.size() > 0)
+        {
+            this.removeAllViews();
+            this.mTabTitles = datas;
+
+            for (String title : mTabTitles)
+            {
+                // 添加view
+                addView(generateTextView(title));
+            }
+            // 设置item的click事件
+            setItemClickEvent();
+        }
+
+    }
+
 }
