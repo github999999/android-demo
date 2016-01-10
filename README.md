@@ -8,7 +8,7 @@
 ------
 OwnPulltoRefreshdDemo
   
-  这个主要是想自主实现一个简单的类似于下拉刷新控件的一个小东东，主要的场景设定为Listview的下拉刷新，详细的下载demo进行查看
+  自己写的一个简单刷新下拉小demo,这个主要是想自主实现一个简单的类似于下拉刷新控件的一个小东东，主要的场景设定为Listview的下拉刷新，详细的下载demo进行查看
   
   ![gif](https://github.com/JerryChan123/raw/blob/master/zzz.gif)
   
