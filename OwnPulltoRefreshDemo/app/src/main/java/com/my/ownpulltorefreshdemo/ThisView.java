@@ -17,6 +17,8 @@ import com.my.ownpulltorefreshdemo.utils.DensityUtil;
 
 /**
  * Created by linchen on 16/1/5.
+ * github:https://github.com/JerryChan123/android-learning
+ * csdn-blog:http://blog.csdn.net/Anny_Lin/article/details/50491501
  */
     public class ThisView extends LinearLayout {
     private ListView listView;
