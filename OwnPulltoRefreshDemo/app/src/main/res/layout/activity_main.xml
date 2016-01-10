@@ -8,12 +8,19 @@
     <com.my.ownpulltorefreshdemo.ThisView
         android:layout_width="match_parent"
         android:orientation="vertical"
+        android:id="@+id/father"
         android:layout_height="match_parent">
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_marginTop="-60dp"
+            android:layout_height="80dp"
+
             android:layout_above="@+id/list"
+            android:text="anny_lin的刷新小demo"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textColor="#ffffff"
+            android:layout_marginTop="-80dp"
+            android:textSize="20sp"
             android:background="#5537c1"/>
         <ListView
             android:layout_width="match_parent"
