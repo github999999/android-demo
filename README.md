@@ -13,3 +13,9 @@ OwnPulltoRefreshdDemo
   ![gif](https://github.com/JerryChan123/raw/blob/master/zzz.gif)
   
 ------
+ZhiMaXinYongDemo
+
+  大体实现支付宝芝麻信用的功能，展示效果如下：
+  
+   ![gif](https://github.com/JerryChan123/raw/blob/master/zhima.gif)
+-----
