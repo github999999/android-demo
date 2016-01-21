@@ -18,4 +18,14 @@ ZhiMaXinYongDemo
   大体实现支付宝芝麻信用的功能，展示效果如下：
   
    ![gif](https://github.com/JerryChan123/raw/blob/master/zhima.gif)
+   
 -----
+
+CustonView 
+
+
+  英文好像打错了.....，主要是想把自己写的loadingView的东西放在里面，现在刚刚写了一个，效果如下所示：
+  
+  实现的是钟摆的效果：
+  
+  ![gif](https://github.com/JerryChan123/raw/blob/master/newton.gif)
