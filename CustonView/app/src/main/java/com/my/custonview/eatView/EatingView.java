@@ -37,6 +37,8 @@ public class EatingView extends View {
 
     private float ballMoveX = 0;
 
+    private ObjectAnimator objectAnimator;
+
     public EatingView(Context context) {
         this(context, null);
     }
@@ -101,7 +103,7 @@ public class EatingView extends View {
 
 
     private void startAnim() {
-        ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(new Object(), "", 2 * HALF_ANGLE);
+         objectAnimator = ObjectAnimator.ofFloat(new Object(), "", 2 * HALF_ANGLE);
         objectAnimator.setEvaluator(new FloatEvaluator());
         objectAnimator.setDuration(800);
         objectAnimator.setInterpolator(new LinearInterpolator());
@@ -168,5 +170,11 @@ public class EatingView extends View {
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         startAnim();
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        objectAnimator.cancel();
     }
 }
