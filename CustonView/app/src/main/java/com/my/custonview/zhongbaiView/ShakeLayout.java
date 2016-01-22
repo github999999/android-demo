@@ -1,18 +1,16 @@
-package com.my.custonview;
+package com.my.custonview.zhongbaiView;
 
 import android.content.Context;
-import android.graphics.Canvas;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.CycleInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
-import android.view.animation.Transformation;
 import android.view.animation.TranslateAnimation;
 import android.widget.LinearLayout;
+
+import com.my.custonview.R;
 
 /**
  * Created by linchen on 16/1/21.

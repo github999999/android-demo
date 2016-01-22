@@ -1,4 +1,4 @@
-package com.my.custonview;
+package com.my.custonview.zhongbaiView;
 
 import android.content.Context;
 import android.graphics.Canvas;

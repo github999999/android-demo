@@ -6,11 +6,17 @@
     android:background="#ee2222"
     tools:context="com.my.custonview.MainActivity">
 
-    <com.my.custonview.ShakeLayout
+    <com.my.custonview.zhongbaiView.ShakeLayout
         android:layout_width="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_height="match_parent">
+        android:layout_centerHorizontal="true"
+        android:id="@+id/shakeLayout"
+        android:layout_height="150dp">
+    </com.my.custonview.zhongbaiView.ShakeLayout>
 
-    </com.my.custonview.ShakeLayout>
+    <com.my.custonview.eatView.EatingView
+        android:layout_width="200dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/shakeLayout"
+        android:layout_height="100dp" />
 
 </RelativeLayout>
