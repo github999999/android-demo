@@ -24,8 +24,10 @@ ZhiMaXinYongDemo
 CustonView 
 
 
-  英文好像打错了.....，主要是想把自己写的loadingView的东西放在里面，现在刚刚写了一个，效果如下所示：
+  英文好像打错了.....，主要是想把自己写的loadingView的东西放在里面，现在效果如下所示：
   
-  实现的是钟摆的效果：
+  1.钟摆的效果
   
-  ![gif](https://github.com/JerryChan123/raw/blob/master/newton.gif)
+  2.贪吃人的效果
+  
+  ![gif](https://github.com/JerryChan123/raw/blob/master/laodingView.gif)
