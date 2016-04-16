@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
                     public void run() {
                         thisView.onRefreshCompleted();
                     }
-                },3000);
+                },1500);
             }
         });
     }

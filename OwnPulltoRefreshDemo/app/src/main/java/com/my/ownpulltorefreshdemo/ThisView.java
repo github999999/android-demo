@@ -119,6 +119,7 @@ import com.my.ownpulltorefreshdemo.utils.DensityUtil;
                     && isOnTop()
                     &&!isRefresh) {
 //                Log.e("canReshresh",true+"");
+
                 intercept=true;
             }else
                 intercept=false;
