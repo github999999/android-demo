@@ -35,4 +35,5 @@ CustonView
 -----
 MyAnimationDemo
   效果如QQ气泡删除效果
-  ！[gif](https://github.com/JerryChan123/android-learning/blob/master/MyAnimatioDemo/show/aa.gif)
+ 
+  ![gif](https://github.com/JerryChan123/android-learning/blob/master/MyAnimatioDemo/show/aa.gif)
