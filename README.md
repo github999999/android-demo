@@ -31,3 +31,8 @@ CustonView
   2.贪吃人的效果
   
   ![gif](https://github.com/JerryChan123/raw/blob/master/laodingView.gif)
+
+-----
+MyAnimationDemo
+  效果如QQ气泡删除效果
+  ！[gif](https://github.com/JerryChan123/android-learning/blob/master/MyAnimatioDemo/show/aa.gif)
