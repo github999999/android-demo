@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="FlingFramelayout">
+        <attr name="textColor" format="color"></attr>
+        <attr name="bgColor" format="color"></attr>
+    </declare-styleable>
+</resources>
