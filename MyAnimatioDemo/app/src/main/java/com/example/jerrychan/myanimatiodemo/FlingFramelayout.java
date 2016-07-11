@@ -30,7 +30,7 @@ public class FlingFramelayout extends FrameLayout {
     PointF mLeftPoint, mCurrentPoiont, mRightPoint, mMidllerPoint;
     private Path mLeftPath, mRightPath, mInitPath;
     private boolean mTouch;
-    private final static float DEFAULT_RADIUS = 40;
+    private final static float DEFAULT_RADIUS = 30;
     private TextView mTextView;
     private int mBgColor, mTextColor;
     private RadiusBean mRadiusBean;
@@ -62,7 +62,6 @@ public class FlingFramelayout extends FrameLayout {
         mTextView.setPadding(10, 10, 10, 10);
         mTextView.setTextColor(mTextColor);
         mTextView.setBackgroundColor(Color.TRANSPARENT);
-        mTextView.setText("100");
         this.addView(mTextView);
     }
 
@@ -96,8 +95,7 @@ public class FlingFramelayout extends FrameLayout {
         mMidllerPoint.y = mLeftPoint.y;
         canvas.drawCircle(mLeftPoint.x, mLeftPoint.y, mRadiusBean.getLeftRadius(), mPaint);
         canvas.drawCircle(mRightPoint.x, mRightPoint.y, mRadiusBean.getRightRadius(), mPaint);
-
-
+        
         if (mTouch) {
             drawTheView(canvas);
         } else {
@@ -132,8 +130,6 @@ public class FlingFramelayout extends FrameLayout {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-
-
         mCurrentPoiont.set(event.getX(), event.getY());
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN: {
@@ -156,13 +152,12 @@ public class FlingFramelayout extends FrameLayout {
                 if (isStartAnim) {
                     return false;
                 }
-
         }
-
         postInvalidate();
         return true;
     }
 
+    //正常不触摸的弹弓效果
     private void initPath(Canvas canvas) {
         float x = mRightPoint.x;
         float y = mRightPoint.y;
@@ -204,14 +199,9 @@ public class FlingFramelayout extends FrameLayout {
 
     //贝塞尔曲线绘制
     private void caculatePath(Path tempPath, PointF tempPoint, Canvas canvas, RadiusBean radiusBean, boolean isRight) {
-        float x;
+        float x = mCurrentPoiont.x;
         float y = mCurrentPoiont.y;
-        if (isRight) {
-            x = mCurrentPoiont.x + 50;
 
-        } else {
-            x = mCurrentPoiont.x - 50;
-        }
         float startX = tempPoint.x;
         float startY = tempPoint.y;
 
@@ -257,8 +247,8 @@ public class FlingFramelayout extends FrameLayout {
 
         tempPath.reset();
         tempPath.moveTo(x1, y1);
-        tempPath.quadTo(anchorX, anchorY, x2, y2);
-        tempPath.lineTo(x3, y3);
+        tempPath.quadTo(anchorX, anchorY, x2, y2 + 10);
+        tempPath.lineTo(x3, y3 - 10);
         tempPath.quadTo(anchorX, anchorY, x4, y4);
         tempPath.lineTo(x1, y1);
 
