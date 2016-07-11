@@ -1,5 +1,6 @@
 package com.example.jerrychan.myanimatiodemo;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
@@ -12,25 +13,29 @@ import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
+import android.view.animation.BounceInterpolator;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
 /**
  * Created by jerrychan on 16/7/5.
+ * 自定义控件
  */
 public class FlingFramelayout extends FrameLayout {
 
     private Paint mPaint;
     private Context mContext;
     private final static int DEFAULTE_COLOR_BG = Color.parseColor("#E9494C");
-    private final static int DEFAULT_COLOR_TEXT=Color.WHITE;
-    PointF mStartPoint, mCurrentPoiont;
-    private Path mPath;
+    private final static int DEFAULT_COLOR_TEXT = Color.BLACK;
+    PointF mLeftPoint, mCurrentPoiont, mRightPoint, mMidllerPoint;
+    private Path mLeftPath, mRightPath, mInitPath;
     private boolean mTouch;
-    private float mRadius = 60;
-    private final static float DEFAULT_RADIUS = 60;
+    private final static float DEFAULT_RADIUS = 40;
     private TextView mTextView;
-    private int mBgColor,mTextColor;
+    private int mBgColor, mTextColor;
+    private RadiusBean mRadiusBean;
+    private boolean isStartAnim = false;
+
 
     public FlingFramelayout(Context context) {
         this(context, null);
@@ -39,10 +44,13 @@ public class FlingFramelayout extends FrameLayout {
     private void init() {
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaint.setColor(mBgColor);
-        mStartPoint = new PointF(100, 100);
         mCurrentPoiont = new PointF();
-        mPath = new Path();
+        mMidllerPoint = new PointF();
+        mLeftPath = new Path();
+        mRightPath = new Path();
+        mInitPath = new Path();
         buildUpTheTextView();
+        mRadiusBean = new RadiusBean(DEFAULT_RADIUS, DEFAULT_RADIUS);
 
 
     }
@@ -62,36 +70,45 @@ public class FlingFramelayout extends FrameLayout {
         mTextView.setText(numberStr);
     }
 
-    public  void setBackGroundColor(int color){
-        mBgColor=color;
+    public void setBackGroundColor(int color) {
+        mBgColor = color;
     }
 
     public FlingFramelayout(Context context, AttributeSet attrs) {
         super(context, attrs);
         mContext = context;
-        TypedArray typedArray=mContext.obtainStyledAttributes(attrs,R.styleable.FlingFramelayout);
-        mBgColor=typedArray.getColor(R.styleable.FlingFramelayout_bgColor,DEFAULTE_COLOR_BG);
-        mTextColor=typedArray.getColor(R.styleable.FlingFramelayout_textColor,DEFAULT_COLOR_TEXT);
+        TypedArray typedArray = mContext.obtainStyledAttributes(attrs, R.styleable.FlingFramelayout);
+        mBgColor = typedArray.getColor(R.styleable.FlingFramelayout_bgColor, DEFAULTE_COLOR_BG);
+        mTextColor = typedArray.getColor(R.styleable.FlingFramelayout_textColor, DEFAULT_COLOR_TEXT);
         typedArray.recycle();
         init();
     }
 
+
     @Override
     protected void dispatchDraw(Canvas canvas) {
         canvas.saveLayer(new RectF(0, 0, getWidth(), getHeight()), mPaint, Canvas.ALL_SAVE_FLAG);
-        canvas.drawCircle(mStartPoint.x, mStartPoint.y, mRadius, mPaint);
+
+        mLeftPoint = new PointF(mRadiusBean.getLeftRadius(), getHeight() / 2);
+        mRightPoint = new PointF(getMeasuredWidth() - mRadiusBean.getRightRadius(), getMeasuredHeight() / 2);
+        //初始化中间点
+        mMidllerPoint.x = (mLeftPoint.x + mRightPoint.x) / 2;
+        mMidllerPoint.y = mLeftPoint.y;
+        canvas.drawCircle(mLeftPoint.x, mLeftPoint.y, mRadiusBean.getLeftRadius(), mPaint);
+        canvas.drawCircle(mRightPoint.x, mRightPoint.y, mRadiusBean.getRightRadius(), mPaint);
+
+
         if (mTouch) {
-            caculatePath();
-            canvas.drawCircle(mStartPoint.x, mStartPoint.y, mRadius, mPaint);
-            canvas.drawCircle(mCurrentPoiont.x, mCurrentPoiont.y, mRadius, mPaint);
-            canvas.drawPath(mPath, mPaint);
-            //将textview的中心放在当前手指位置
-            mTextView.setX(mCurrentPoiont.x - mTextView.getWidth() / 2);
-            mTextView.setY(mCurrentPoiont.y - mTextView.getHeight() / 2);
+            drawTheView(canvas);
         } else {
             //设置回到圆圈点
-            mTextView.setX(mStartPoint.x - mTextView.getWidth() / 2);
-            mTextView.setY(mStartPoint.y - mTextView.getHeight() / 2);
+            mTextView.setX(getWidth() / 2);
+            mTextView.setY(getHeight() / 2);
+            if (isStartAnim) {
+                drawTheView(canvas);
+            } else {
+                initPath(canvas);
+            }
         }
         canvas.restore();
         super.dispatchDraw(canvas);
@@ -99,10 +116,25 @@ public class FlingFramelayout extends FrameLayout {
 
     }
 
+    private void drawTheView(Canvas canvas) {
+        //绘制左边的贝塞尔曲线
+        caculatePath(mLeftPath, mLeftPoint, canvas, mRadiusBean, false);
+        //绘制右边的贝塞尔曲线
+        caculatePath(mRightPath, mRightPoint, canvas, mRadiusBean, true);
+
+        canvas.drawCircle(mCurrentPoiont.x, mCurrentPoiont.y, DEFAULT_RADIUS, mPaint);
+
+        //将textview的中心放在当前手指位置
+        mTextView.setX(mCurrentPoiont.x - mTextView.getWidth() / 2);
+        mTextView.setY(mCurrentPoiont.y - mTextView.getHeight() / 2);
+    }
+
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 
+
+        mCurrentPoiont.set(event.getX(), event.getY());
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN: {
                 // 判断触摸点是否在tipImageView中
@@ -119,36 +151,29 @@ public class FlingFramelayout extends FrameLayout {
                 break;
             }
             case MotionEvent.ACTION_UP:
-                mRadius = DEFAULT_RADIUS;
                 mTouch = false;
+                startBounceAnim(mCurrentPoiont.x, mCurrentPoiont.y);
+                if (isStartAnim) {
+                    return false;
+                }
 
         }
-        mCurrentPoiont.set(event.getX(), event.getY());
+
         postInvalidate();
         return true;
     }
 
-    //使用贝塞尔曲线进行两圆圈之间的区域的绘制
-    private void caculatePath() {
-        float x = mCurrentPoiont.x;
-        float y = mCurrentPoiont.y;
-        float startX = mStartPoint.x;
-        float startY = mStartPoint.y;
-
+    private void initPath(Canvas canvas) {
+        float x = mRightPoint.x;
+        float y = mRightPoint.y;
+        float startX = mLeftPoint.x;
+        float startY = mLeftPoint.y;
         // 根据角度算出四边形的四个点
         float dx = x - startX;
         float dy = y - startY;
         double a = Math.atan(dy / dx);
-        float offsetX = (float) (mRadius * Math.sin(a));
-        float offsetY = (float) (mRadius * Math.cos(a));
-
-        float distance = (float) Math.sqrt(Math.pow(y - startY, 2) + Math.pow(x - startX, 2));
-        mRadius = DEFAULT_RADIUS - distance / 15;
-
-        if (mRadius < 20) {
-            mRadius = 20;
-        }
-
+        float offsetX = (float) (mRadiusBean.getRightRadius() * Math.sin(a));
+        float offsetY = (float) (mRadiusBean.getRightRadius() * Math.cos(a));
         // 根据角度算出四边形的四个点
         float x1 = startX + offsetX;
         float y1 = startY - offsetY;
@@ -165,12 +190,104 @@ public class FlingFramelayout extends FrameLayout {
         float anchorX = (startX + x) / 2;
         float anchorY = (startY + y) / 2;
 
-        mPath.reset();
-        mPath.moveTo(x1, y1);
-        mPath.quadTo(anchorX, anchorY, x2, y2);
-        mPath.lineTo(x3, y3);
-        mPath.quadTo(anchorX, anchorY, x4, y4);
-        mPath.lineTo(x1, y1);
+        mInitPath.reset();
+        mInitPath.moveTo(x1, y1);
+        mInitPath.quadTo(anchorX, anchorY, x2, y2);
+        mInitPath.lineTo(x3, y3);
+        mInitPath.quadTo(anchorX, anchorY, x4, y4);
+        mInitPath.lineTo(x1, y1);
+
+        canvas.drawPath(mInitPath, mPaint);
+
+
+    }
+
+    //贝塞尔曲线绘制
+    private void caculatePath(Path tempPath, PointF tempPoint, Canvas canvas, RadiusBean radiusBean, boolean isRight) {
+        float x;
+        float y = mCurrentPoiont.y;
+        if (isRight) {
+            x = mCurrentPoiont.x + 50;
+
+        } else {
+            x = mCurrentPoiont.x - 50;
+        }
+        float startX = tempPoint.x;
+        float startY = tempPoint.y;
+
+        // 根据角度算出四边形的四个点
+        float dx = x - startX;
+        float dy = y - startY;
+        double a = Math.atan(dy / dx);
+        float offsetX, offsetY;
+        float distance = (float) Math.sqrt(Math.pow(y - startY, 2) + Math.pow(x - startX, 2));
+
+        if (isRight) {
+            offsetX = (float) (radiusBean.getRightRadius() * Math.sin(a));
+            offsetY = (float) (radiusBean.getRightRadius() * Math.cos(a));
+            radiusBean.setRightRadius(DEFAULT_RADIUS - distance / 30);
+//            Log.e("setRIGHTRadius", radiusBean.getRightRadius() + "");
+        } else {
+            offsetX = (float) (radiusBean.getLeftRadius() * Math.sin(a));
+            offsetY = (float) (radiusBean.getLeftRadius() * Math.cos(a));
+            radiusBean.setLeftRadius(DEFAULT_RADIUS - distance / 30);
+//            Log.e("setLeftRadius", radiusBean.getLeftRadius() + "");
+        }
+        if (radiusBean.getLeftRadius() < 20) {
+            radiusBean.setLeftRadius(20);
+        }
+        if (radiusBean.getRightRadius() < 20) {
+            radiusBean.setRightRadius(20);
+        }
+        // 根据角度算出四边形的四个点
+        float x1 = startX + offsetX;
+        float y1 = startY - offsetY;
+
+        float x2 = x + offsetX;
+        float y2 = y - offsetY;
+
+        float x3 = x - offsetX;
+        float y3 = y + offsetY;
+
+        float x4 = startX - offsetX;
+        float y4 = startY + offsetY;
+
+        float anchorX = (startX + x) / 2;
+        float anchorY = (startY + y) / 2;
+
+        tempPath.reset();
+        tempPath.moveTo(x1, y1);
+        tempPath.quadTo(anchorX, anchorY, x2, y2);
+        tempPath.lineTo(x3, y3);
+        tempPath.quadTo(anchorX, anchorY, x4, y4);
+        tempPath.lineTo(x1, y1);
+
+        canvas.drawPath(tempPath, mPaint);
+    }
+
+
+    private void startBounceAnim(final float currentX, final float currentY) {
+        ValueAnimator mAnimator;
+        isStartAnim = true;
+        mAnimator = ValueAnimator.ofFloat(100, 0);
+        mAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float value = (float) animation.getAnimatedValue();
+                mCurrentPoiont.x = ((value - 100) / 100) * (currentX - mMidllerPoint.x) + currentX;
+                mCurrentPoiont.y = ((value - 100) / 100) * (currentY - mMidllerPoint.y) + currentY;
+                if (value == 0) {
+                    isStartAnim = false;
+                }
+                postInvalidate();
+            }
+        });
+        mAnimator.setDuration(500).setInterpolator(new BounceInterpolator());
+
+        if (mAnimator.isStarted()) {
+            mAnimator.cancel();
+        }
+        mAnimator.start();
     }
 
 }
