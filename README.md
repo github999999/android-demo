@@ -34,6 +34,6 @@ CustonView
 
 -----
 MyAnimationDemo
-  效果如QQ气泡删除效果
+  贝塞尔曲线小练习
  
   ![gif](https://github.com/JerryChan123/android-learning/blob/master/MyAnimatioDemo/show/az.gif)
