@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="RippleLayout">
+    <attr name="ripple_black_color" format="color"></attr>
+    <attr name="ripple_white_color" format="color"></attr>
+    <attr name="ripple_time" format="integer"></attr>
+    <attr name="is_support_scale" format="boolean"></attr>
+</declare-styleable>
+</resources>

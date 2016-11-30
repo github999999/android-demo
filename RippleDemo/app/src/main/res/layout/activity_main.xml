@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/activity_main"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
+    tools:context="com.example.jerrychan.demo.MainActivity"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.example.jerrychan.demo.RippleLayout
+        android:layout_width="300dp"
+        app:ripple_black_color="#80000000"
+        app:ripple_white_color="#ee2233"
+        android:id="@+id/qq"
+        android:layout_height="200dp">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textSize="20sp"
+            android:text="你好啊"/>
+    </com.example.jerrychan.demo.RippleLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:background="?android:attr/selectableItemBackground"
+        android:layout_height="match_parent">
+
+    </RelativeLayout>
+</LinearLayout>
