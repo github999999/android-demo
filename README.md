@@ -37,3 +37,7 @@ MyAnimationDemo
   贝塞尔曲线小练习
  
   ![gif](https://github.com/JerryChan123/android-learning/blob/master/MyAnimatioDemo/show/az.gif)
+
+------
+RippleDemo
+  水波纹效果的小Demo
